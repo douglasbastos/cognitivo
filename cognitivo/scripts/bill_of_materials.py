@@ -1,11 +1,9 @@
 import csv
-from numbers import Integral
 
 from sqlalchemy.exc import IntegrityError
 
 from cognitivo.config import PROJECT_ROOT, DBSession
-from cognitivo.models import Component, BaseType, OutsideShape, TubeAssembly, \
-    TubeAssemblyHasComponent
+from cognitivo.models import TubeAssembly, TubeAssemblyHasComponent
 
 
 def run():
