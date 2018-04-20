@@ -1,3 +1,8 @@
+Versão do Python
+---
+python3.6
+
+
 Instalando o projeto
 ---
 
