@@ -16,23 +16,23 @@ class OutsideShape(Base):
     __tablename__ = 'outside_shape'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String)
+    name = Column(String(55))
 
 
 class BaseType(Base):
     __tablename__ = 'base_type'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String)
+    name = Column(String(55))
 
 
 class Component(Base):
     __tablename__ = 'component'
 
-    id = Column(String, primary_key=True)
+    id = Column(String(15), primary_key=True)
 
-    component_type_id = Column(String, nullable=False)
-    connection_type_id = Column(String, nullable=False)
+    component_type_id = Column(String(15), nullable=False)
+    connection_type_id = Column(String(15), nullable=False)
 
     outside_shape_id = Column(Integer, ForeignKey(OutsideShape.id))
     outside_shape = relationship(OutsideShape)
@@ -40,7 +40,7 @@ class Component(Base):
     base_type_id = Column(Integer, ForeignKey(BaseType.id))
     base_type = relationship(BaseType)
 
-    type = Column(String)
+    type = Column(String(15))
     height_over_tube = Column(Float)
     bolt_pattern_long = Column(Float)
     bolt_pattern_wide = Column(Float)
@@ -55,13 +55,13 @@ class Component(Base):
 class TubeAssemblyHasComponent(Base):
     __tablename__ = 'tube_assembly_has_component'
 
-    tube_assembly_id = Column(String,
+    tube_assembly_id = Column(String(15),
                               ForeignKey(TubeAssembly.id),
                               primary_key=True,
                               nullable=False)
     tube_assembly = relationship(TubeAssembly)
 
-    component_id = Column(String,
+    component_id = Column(String(15),
                           ForeignKey(Component.id),
                           primary_key=True,
                           nullable=False)
@@ -74,12 +74,12 @@ class PriceQuote(Base):
     __tablename__ = 'price_quote'
 
     id = Column(Integer, primary_key=True)
-    tube_assembly_id = Column(String,
+    tube_assembly_id = Column(String(15),
                               ForeignKey(TubeAssembly.id),
                               nullable=False)
     tube_assembly = relationship(TubeAssembly)
 
-    supplier = Column(String)
+    supplier = Column(String(15))
     quote_date = Column(Date)
     annual_usage = Column(Integer)
     min_order_quantity = Column(Integer)
