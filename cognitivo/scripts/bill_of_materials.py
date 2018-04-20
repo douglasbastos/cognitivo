@@ -14,15 +14,17 @@ def run():
         for row in reader:
             print(f"Insering row {row['tube_assembly_id']}")
 
-            tube_assemly = TubeAssembly(id=row['tube_assembly_id'])
-            session.add(tube_assemly)
+            tube_assembly = TubeAssembly(id=row['tube_assembly_id'])
+            session.add(tube_assembly)
+            session.commit()
 
             for i in range(1, 9):
                 if row[f'component_id_{i}'] == 'NA':
                     break
 
+                component_id = row[f'component_id_{i}']
                 item = TubeAssemblyHasComponent(
-                    tube_assembly=tube_assemly,
+                    tube_assembly=tube_assembly,
                     component_id=row[f'component_id_{i}'],
                     quantity=row[f'quantity_{i}']
                 )
@@ -31,7 +33,7 @@ def run():
                     session.commit()
                 except IntegrityError:
                     session.rollback()
-                    print(f'Ignorando repetição em tube_assembly_id: {tube_assemly.id}')
+                    print(f'Componente não existe component_id: {component_id}')
 
         session.close()
 

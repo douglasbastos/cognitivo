@@ -5,6 +5,10 @@ variáveis de ambiente para acessar corretamente o banco MySQL, definimos també
 variável `USE_MYSQL` para caso não seja setada utilizar o SqLite como opção.
 Todos os detalhes dessas variáveis estão abaixo
 
+Existe bastantes componentes que estão na `bill_of_materials.csv` mas não
+existe no csv de componentes o `comp_boss.csv`, esses componentes foram
+ignorados na hora da inserção
+
 Variáveis de ambiente
 ---
 - `USE_MYSQL` - Pode ser definida como 1 ou 0, no caso de 0 ou da não definição dessa variável será usado o sqlite como base de dados
