@@ -34,10 +34,10 @@ class Component(Base):
     component_type_id = Column(String, nullable=False)
     connection_type_id = Column(String, nullable=False)
 
-    outside_shape_id = Column(Integer, ForeignKey(OutsideShape.id), nullable=False)
+    outside_shape_id = Column(Integer, ForeignKey(OutsideShape.id))
     outside_shape = relationship(OutsideShape)
 
-    base_type_id = Column(Integer, ForeignKey(BaseType.id), nullable=False)
+    base_type_id = Column(Integer, ForeignKey(BaseType.id))
     base_type = relationship(BaseType)
 
     type = Column(String)

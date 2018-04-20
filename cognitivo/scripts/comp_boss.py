@@ -3,6 +3,8 @@ import csv
 from cognitivo.config import PROJECT_ROOT, DBSession
 from cognitivo.models import Component, BaseType, OutsideShape
 
+CACHE_KEY = '{tablename}:{key}'
+
 
 class Cache:
     item = {}
@@ -14,46 +16,49 @@ class Cache:
         self.item[key] = value
 
 
+def get_or_create(cache, session, table, data):
+    if data == 'NA':
+        return
+
+    item = cache.get(
+        CACHE_KEY.format(
+            tablename=table.__tablename__,
+            key=data)
+    )
+    if not item:
+        item = table(name=data)
+        session.add(item)
+        session.commit()
+        cache.set(CACHE_KEY.format(
+            tablename=table.__tablename__,
+            key=data), item)
+
+    return item
+
+
+def get_id(attr):
+    try:
+        return attr.id
+    except AttributeError:
+        return None
+
+
 def run():
     with open(f'{PROJECT_ROOT}/files/comp_boss.csv', 'r') as csv_file:
         reader = csv.DictReader(csv_file, delimiter=',')
         cache = Cache()
         session = DBSession()
 
-        key_pattern_in_cache = '{tablename}:{key}'
-
         for row in reader:
             print(f'Insering row {row["component_id"]}')
 
-            # base_type
-            base_type = cache.get(
-                key_pattern_in_cache.format(
-                    tablename='base_type',
-                    key=row['base_type'])
-            )
-            if not base_type:
-                base_type = BaseType(name=row['base_type'])
-                session.add(base_type)
-                session.commit()
-                cache.set(key_pattern_in_cache.format(
-                    tablename='base_type',
-                    key=row['base_type']), base_type)
+            base_type = get_or_create(cache, session,
+                                      table=BaseType,
+                                      data=row['base_type'])
+            outside_shape = get_or_create(cache, session,
+                                          table=OutsideShape,
+                                          data=row['outside_shape'])
 
-            # outside_shape
-            outside_shape = cache.get(
-                key_pattern_in_cache.format(
-                    tablename='outside_shape',
-                    key=row['outside_shape'])
-            )
-            if not outside_shape:
-                outside_shape = OutsideShape(name=row['outside_shape'])
-                session.add(outside_shape)
-                session.commit()
-                cache.set(key_pattern_in_cache.format(
-                    tablename='outside_shape',
-                    key=row['outside_shape']), outside_shape)
-
-            # TODO: lembrar de validar o NA
             component = Component(
                 id=row['component_id'],
                 component_type_id=row['component_type_id'],
@@ -68,8 +73,8 @@ def run():
                 unique_feature=True if row['unique_feature'] == 'Yes' else False,
                 orientation=True if row['orientation'] == 'Yes' else False,
                 weight=row['weight'] if row['weight'] != 'NA' else None,
-                outside_shape_id=outside_shape.id,
-                base_type_id=base_type.id
+                outside_shape_id=get_id(outside_shape),
+                base_type_id=get_id(base_type)
             )
             session.add(component)
             session.commit()
