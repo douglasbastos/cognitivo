@@ -1,24 +1,23 @@
 import os
 
-from sqlalchemy import create_engine, MetaData
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-#
-# USER = 'root'
-# PWD = 'root'
-# HOST = 'localhost'
-# DB_NAME = 'test_database'
-#
 
-# SQLALCHEMY_CONN_STR = f"mysql+pymysql://{USER}:{PWD}@{HOST}/{DB_NAME}"
+USE_MYSQL = os.environ.get('USE_MYSQL', '0') == '1'
+MYSQL_USER = os.environ.get('MYSQL_USER', 'root')
+MYSQL_PWD = os.environ.get('MYSQL_PWD', '')
+MYSQL_HOST = os.environ.get('MYSQL_HOST', 'localhost')
+MYSQL_DB_NAME = os.environ.get('MYSQL_DB_NAME', 'my_database')
 
-# engine = create_engine(SQLALCHEMY_CONN_STR)
-# session = scoped_session(sessionmaker(bind=engine))
-#
-#
-# metadata = MetaData()
+SQLALCHEMY_CONN_STR = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PWD}@{MYSQL_HOST}/{MYSQL_DB_NAME}"
 
-engine = create_engine('sqlite:///../sqlalchemy_example.db')
+
+if USE_MYSQL:
+    engine = create_engine(SQLALCHEMY_CONN_STR)
+else:
+    engine = create_engine('sqlite:///../cognitivo.db')
+
 DBSession = sessionmaker(bind=engine)
