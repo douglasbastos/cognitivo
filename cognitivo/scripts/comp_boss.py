@@ -36,13 +36,6 @@ def get_or_create(cache, session, table, data):
     return item
 
 
-def get_id(attr):
-    try:
-        return attr.id
-    except AttributeError:
-        return None
-
-
 def run():
     with open(f'{PROJECT_ROOT}/files/comp_boss.csv', 'r') as csv_file:
         reader = csv.DictReader(csv_file, delimiter=',')
@@ -73,8 +66,8 @@ def run():
                 unique_feature=True if row['unique_feature'] == 'Yes' else False,
                 orientation=True if row['orientation'] == 'Yes' else False,
                 weight=row['weight'] if row['weight'] != 'NA' else None,
-                outside_shape_id=get_id(outside_shape),
-                base_type_id=get_id(base_type)
+                outside_shape=outside_shape,
+                base_type=base_type
             )
             session.add(component)
             session.commit()

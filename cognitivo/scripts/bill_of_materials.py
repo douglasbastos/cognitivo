@@ -16,14 +16,13 @@ def run():
 
             tube_assemly = TubeAssembly(id=row['tube_assembly_id'])
             session.add(tube_assemly)
-            session.commit()
 
             for i in range(1, 9):
                 if row[f'component_id_{i}'] == 'NA':
                     break
 
                 item = TubeAssemblyHasComponent(
-                    tube_assembly_id=tube_assemly.id,
+                    tube_assembly=tube_assemly,
                     component_id=row[f'component_id_{i}'],
                     quantity=row[f'quantity_{i}']
                 )
