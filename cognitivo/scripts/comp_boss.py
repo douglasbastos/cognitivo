@@ -23,8 +23,9 @@ def run():
         key_pattern_in_cache = '{tablename}:{key}'
 
         for row in reader:
-            # BASE_TYPE
-            print('Insering row')
+            print(f'Insering row {row["component_id"]}')
+
+            # base_type
             base_type = cache.get(
                 key_pattern_in_cache.format(
                     tablename='base_type',
